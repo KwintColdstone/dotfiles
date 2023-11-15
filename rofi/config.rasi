@@ -1,0 +1,14 @@
+configuration {
+  display-drun: "Applications:";
+  display-window: "Windows:";
+  drun-display-format: "{icon}{name}";
+  font: "AgaveNerdFontPropo Bold 15";
+  modi: "window,run,drun,";
+  show-icons: true;
+  icon-theme: "Papirus";
+}
+
+
+//@theme "/usr/share/rofi/themes/gruvbox-dark-soft.rasi"
+//@theme "/home/jackthedowser/.local/share/rofi/themes/squared-everforest.rasi"
+@theme "/usr/share/rofi/themes/gruvbox-dark.rasi"
