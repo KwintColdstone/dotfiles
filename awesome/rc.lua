@@ -21,9 +21,8 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
--- Load Debian menu entries
-local debian = require("debian.menu")
-local has_fdo, freedesktop = pcall(require, "freedesktop")
+--widgets
+local batteryarc_widget = require("awesome-wm-widgets.batteryarc-widget.batteryarc")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -100,21 +99,18 @@ myawesomemenu = {
 local menu_awesome = { "awesome", myawesomemenu, beautiful.awesome_icon }
 local menu_terminal = { "open terminal", terminal }
 
-if has_fdo then
-    mymainmenu = freedesktop.menu.build({
-        before = { menu_awesome },
-        after =  { menu_terminal }
-    })
-else
-    mymainmenu = awful.menu({
-        items = {
-                  menu_awesome,
-                  { "Debian", debian.menu.Debian_menu.Debian },
-                  menu_terminal,
-                }
-    })
-end
+myawesomemenu = {
+   { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
+   { "manual", terminal .. " -e man awesome" },
+   { "edit config", editor_cmd .. " " .. awesome.conffile },
+   { "restart", awesome.restart },
+   { "quit", function() awesome.quit() end },
+}
 
+mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
+                                    { "open terminal", terminal }
+                                  }
+                        })
 
 mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
                                      menu = mymainmenu })
@@ -191,9 +187,9 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- Each screen has its own tag table.
    -- awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
-    local names={"Main","Web","Video","Office"}
+    local names={"Main","Web","Obsidian","Video","Office"}
     local l = awful.layout.suit
-    local layouts = {l.tile,l.tile,l.floating,l.floating,}
+    local layouts = {l.tile,l.tile,l.tile,l.tile,l.floating}
     awful.tag(names,s,layouts)
 
  
@@ -254,7 +250,7 @@ awful.screen.connect_for_each_screen(function(s)
 	
 	--ronde hoeken
     function custom_shape(cr, width, height)
-	gears.shape.rounded_rect(cr, width, height, 0)
+	gears.shape.rounded_rect(cr, width, height, 7)
     end
 
 
@@ -274,7 +270,7 @@ awful.screen.connect_for_each_screen(function(s)
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-	    wibox.layout.margin(mylauncher, 4, 4, 4, 4),
+	    wibox.layout.margin(mylauncher, 12, 4, 4, 4),
             s.mypromptbox,
 	    wibox.layout.margin(s.mytaglist, 25, 0, 0, 0),
         },
@@ -286,7 +282,7 @@ awful.screen.connect_for_each_screen(function(s)
 	},
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            mykeyboardlayout,
+            batteryarc_widget(),
             wibox.widget.systray(),
             wibox.layout.margin(mytextclock,0,30,0,0),
            -- s.mylayoutbox,
@@ -313,7 +309,17 @@ globalkeys = gears.table.join(
         awful.util.spawn("brightnessctl s 15%-") end),
         awful.key({ }, "XF86MonBrightnessUp", function ()
         awful.util.spawn("brightnessctl s +15%") end),
-		
+	--volume
+ 	awful.key({ }, "XF86AudioRaiseVolume", function ()
+        awful.util.spawn("amixer set Master 5%+") end),
+        awful.key({ }, "XF86AudioLowerVolume", function ()
+        awful.util.spawn("amixer set Master 5%-") end),
+	awful.key({ }, "XF86AudioMute", function ()
+        awful.util.spawn("amixer set Master toggle") end),
+
+
+	--launch browser
+	awful.key({ modkey, }, "b", function () awful.util.spawn("thorium-browser-sse3") end),
 
 
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
@@ -531,6 +537,8 @@ root.keys(globalkeys)
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
+
+
     -- All clients will match this rule.
     { rule = { },
       properties = { border_width = beautiful.border_width,
@@ -576,9 +584,12 @@ awful.rules.rules = {
       }, properties = { floating = true }},
 
 
-    -- Set Firefox to always map on the tag named "2" on screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { screen = 1, tag = "2" } },
+    -- Set Thorium to always map on the tag named "2" on screen 1.
+    { rule = { class = "Thorium" },
+       properties = { tag = "Web", switchtotag = true } },
+     -- Set Obsidian to always map on the tag named "2" on screen 1.
+    { rule = { class = "obsidian" },
+       properties = { tag = "Obsidian", switchtotag = true } },	
 }
 -- }}}
 
@@ -617,3 +628,4 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 awful.spawn.with_shell("picom --config /home/jackthedowser/.config/picom//picom.conf ")
 awful.spawn.with_shell("nitrogen --set-zoom-fill --restore")
 awful.spawn.with_shell("nm-applet")
+awful.spawn.with_shell("redshift -l 52.377956:4.897070")
