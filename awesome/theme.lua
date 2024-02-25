@@ -15,11 +15,11 @@ theme.font          = "AgaveNerdFontPropo Bold 11"
 
 --wibar
 
-theme.wibar_height  = 30
+theme.wibar_height  = 25
 theme.wibar_opacity = 1
-theme.wibar_border_width = 0
-theme.wibar_border_color = "red"
-theme.bg_normal     = "#d4be98"
+theme.wibar_border_width = dpi(2.2)
+theme.wibar_border_color = "#282828"
+theme.bg_normal     = "#C4E1C5" --"#d4be98"
 theme.bg_focus      = theme.bg_normal
 theme.bg_urgent     = "#ff0000"
 theme.bg_minimize   = "#444444"
@@ -32,7 +32,7 @@ theme.taglist_font_focus = "AgaveNerdFontPropo Bold 13"
 theme.fg_urgent     = "#ffffff"
 theme.fg_minimize   = "#ffffff"
 
-theme.useless_gap   = dpi(12)
+theme.useless_gap   = dpi(6)
 theme.border_width  = dpi(4)
 theme.border_normal = "#282828"
 theme.border_focus  = "#32302f"
@@ -125,7 +125,9 @@ theme.layout_cornerne = themes_path.."default/layouts/cornernew.png"
 theme.layout_cornersw = themes_path.."default/layouts/cornersww.png"
 theme.layout_cornerse = themes_path.."default/layouts/cornersew.png"
 
--- Generate Awesome icon:
+-- Generate Awesome icon(logo):
+theme.apple_icon = "/home/JackTheDowser/Pictures/applelogo.svg"
+
 theme.awesome_icon = theme_assets.awesome_icon(
     theme.menu_height, theme.fg_normal, "white"
 )
