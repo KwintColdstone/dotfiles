@@ -112,7 +112,7 @@ mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesom
                                   }
                         })
 
-mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
+mylauncher = awful.widget.launcher({ image = beautiful.apple_icon,
                                      menu = mymainmenu })
 
 -- Menubar configuration
@@ -263,14 +263,14 @@ awful.screen.connect_for_each_screen(function(s)
 	        shape = custom_shape,
 		width = dpi(1200),
      })
-     s.mywibox.y = 10
+     s.mywibox.y = 5
 
     -- Add widgets to the wibox
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-	    wibox.layout.margin(mylauncher, 12, 4, 4, 4),
+	    wibox.layout.margin(mylauncher, 12, 0, 2, 4),
             s.mypromptbox,
 	    wibox.layout.margin(s.mytaglist, 25, 0, 0, 0),
         },
@@ -628,4 +628,3 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 awful.spawn.with_shell("picom --config /home/jackthedowser/.config/picom//picom.conf ")
 awful.spawn.with_shell("nitrogen --set-zoom-fill --restore")
 awful.spawn.with_shell("nm-applet")
-awful.spawn.with_shell("redshift -l 52.377956:4.897070")
